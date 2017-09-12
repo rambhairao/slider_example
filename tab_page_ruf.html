@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>text slider with tab and button</title>
+    <script src="https://code.jquery.com/jquery-3.1.0.js">
+    </script>
+    <style type="text/css">
+            body{
+                background-color: cadetblue;
+            }
+          
+          li{
+           display: inline-block;
+           background-color: #009b86;
+           padding: 10px;
+           border-radius: 4px;
+          }
+          .container_content li {
+           display: inline-block;
+          }
+          .image_container{
+           margin:0 auto;
+               width:530px;
+               height:350px;
+               overflow: hidden;
+               position: relative;
+          }
+       
+          
+          .image_container img{
+           width: 530px;
+
+          }
+
+          #tab_div li{
+           cursor: pointer;
+          }
+          .image_container ul {
+            width: 2120px;
+          }
+          .active_tab_color{
+            background-color: red;
+            transition: all 5s;
+          }
+    </style>
+</head>
+<body>
+    <div class="container" id="main">
+        <div id="tab_div">
+            <ul>
+                <li>tab 1</li>
+                <li>tab 2</li>
+                <li>tab 3</li>
+                <li>tab 4</li>
+            </ul>
+        </div>
+        <div>
+            <div>
+                <button id="button1">Next</button>
+            </div>
+            <div>
+                <button id="button2">Back</button>
+            </div>
+        </div>
+        <div class="image_container">
+            <ul style="position: relative;">
+                <li><img src="1.jpg"></li>
+                <li><img src="2.jpg"></li>
+                <li><img src="3.jpg"></li>
+                <li><img src="4.jpg"></li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">
+          
+            $(document).ready(function() {
+      var current_image  = 1;
+      var image_width    = 530;
+     
+      var total_image    = $(".image_container img").length;
+      var container_ul   = $(".image_container ul");
+      var element        = container_ul.find(':first-child').prop("tagName");
+      resetsldies();
+      var  active_class       =  $(".image_container li").eq( 1 ).addClass("active_content").siblings().removeClass("active_content");
+      
+
+      // clicks on tab links statement start......
+      $("#tab_div li").on('click', function(event){
+
+           event.preventDefault();
+           var current_tab_var = $(this).data('current_tab_var');
+
+           if (!current_tab_var){
+            current_tab_var = 0;
+             
+            
+           } else {
+            current_tab_var = $("#tab_div li").index( $("#tab_div li").hasClass("active_tab_color"));
+             
+           }
+
+            var  tab_index_var      =  $("#tab_div li").index(this); // index no. of tab selected 
+            $("#tab_div li").eq(tab_index_var).addClass("active_tab_color").siblings().removeClass("active_tab_color");
+            
+      
+            // statement for frent end animate start here.....
+            if (tab_index_var > current_tab_var) {
+               $(".image_container li").eq(tab_index_var).after( $(".image_container li").eq( 1 ));
+             $(".image_container ul").animate(
+             {
+              left : image_width * -2
+             }, 1500, function(){
+              
+              $(".image_container li").eq(tab_index_var).addClass("active_content").siblings().removeClass("active_content");
+              resetsldies();
+              $(container_ul).find("li:first").after( $(container_ul).find("li:last"));
+             })
+            
+           }
+           // statement for frent end animation end here.....
+
+               //  statement for animation for back side start.....
+              else{
+                 if (tab_index_var < current_tab_var) {
+                  $(",image_container li").eq(tab_index_var).before( $(".image_container li").eq( 1 ));
+                  $(".image_container ul").animate({
+                    left : 0 
+                  }, 1500, function(){
+
+                    $(".image_container li").eq(tab_index_var ).addClass("active_content").siblings().removeClass("active_content");
+                    
+                    resetsldies();
+                    $(container_ul).find("li:last").before( $(container_ul).find("li:first"));
+                  })
+
+                 }
+                 //   stament for  animation for back side end....
+
+
+                 if (tab_index_var == current_tab_var) {
+                   return false;
+                 }
+              }
+              
+
+      });  
+      // click on tab links staments end......
+
+
+      $("div button").on('click', function(event) {
+        event.preventDefault();
+        if (event.target.id == 'button1') {
+          
+          $(".image_container ul").animate(
+            {
+              left: image_width * -2
+            }, 1500, function() {
+              $(container_ul).find("li:last").after( $(container_ul).find("li:first"));
+              resetsldies();
+            })
+          } //  button -1 if statements end here ...... 
+
+          else {
+                  if (event.target.id == 'button2') {
+                    $(".image_container ul").animate({
+                      left: 0
+                    }, 1500, function(){
+                      $(container_ul).find("li:first").before( $(container_ul).find("li:last"));
+                      resetsldies();
+                    })
+                  }
+          }; 
+        
+      }); // button click  end here .... 
+      function resetsldies() {
+          $(".image_container ul").css({
+            'left': -1 * image_width
+          });
+        } // reset fucntion end 
+    }); // ready function end here.... hurry ! 
+    </script>
+</body>
+</html>
